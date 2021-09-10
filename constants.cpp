@@ -1,7 +1,7 @@
 #include "constants.hpp"
 
-const std::string C_ship_file_path = "Resources/ship.bmp";
-const std::string C_alien_file_path = "Resources/alien.bmp";
+const std::string C_ship_file_path = "Resources/shipp.png";
+const std::string C_alien_file_path = "Resources/alienn.png";
 
 const float dimensionX = 750;
 const float dimensionY = 450;

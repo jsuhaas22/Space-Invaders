@@ -69,16 +69,25 @@ void Game::handle_key_events(sf::Event &event)
     }
 }
 
+/* Currently the function constructs a new fleet from the left, always.
+ * New rows are created when function hits left again, at (0.0f, 0.0f).
+ * 1. Change needed: the first row must be constructed on one side, and subsequent rows on the other.
+ * 2. Change needed: new row should be created when function hits opp of first row site, at (0ordimX, 0-(aliensize/2))
+ * Easy enough, but I am too sleepy to bother rn.
+ */
 void Game::create_fleet()
 {
+    int i;
     Alien temp_alien;
     sf::Vector2u alien_size = temp_alien.get_size();
     int num_in_row = dimensionX / alien_size.x;
     sf::Vector2f leftmost_alien_pos = sf::Vector2f(0.f, 0.f);
-    for(int i = 0; i < num_in_row - 1; ++i)
+    for(i = 0; i < num_in_row - 1; ++i)
     {
-        alien_fleet.push_back(new Alien(sf::Vector2f(leftmost_alien_pos.x + (i * alien_size.x), 0.f)));
+        alien_fleet.push_back(new Alien(i + alien_num, 
+        sf::Vector2f(leftmost_alien_pos.x + (i * alien_size.x), 0.f)));
     }
+    alien_num += i;
 }
 
 void Game::move_fleet()
@@ -109,6 +118,7 @@ void Game::move_fleet()
             cur_movement = Movement::RIGHT;
             if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
                 move_fleet_down();
+                create_fleet();
             }
         }
     }

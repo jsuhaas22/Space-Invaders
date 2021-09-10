@@ -11,9 +11,10 @@ class Alien : public sf::Sprite
 private:
     sf::Vector2u size;
     sf::Texture texture;
+    unsigned int id;
 
 public:
-    Alien(const sf::Vector2f &position = sf::Vector2f(0.f, 0.f));
+    Alien(const unsigned int ID = 0, const sf::Vector2f &position = sf::Vector2f(0.f, 0.f));
     sf::Vector2u get_size() const;
     void draw_alien(sf::RenderWindow &window);
 };

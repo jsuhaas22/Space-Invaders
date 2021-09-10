@@ -20,6 +20,7 @@ private:
     std::vector<Alien*> alien_fleet;
     Ship ship;
     Movement cur_movement;
+    int alien_num = 0;
 
     void handle_key_events(sf::Event &event);
     void render();

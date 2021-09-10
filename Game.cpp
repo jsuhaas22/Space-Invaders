@@ -8,6 +8,7 @@ Game::Game()
     /*Window creation*/
     window.create(sf::VideoMode(dimensionX, dimensionY), "Space Invaders!");
     ship.init(sf::Vector2f(dimensionX / 2, dimensionY - ship.get_size().y));
+    cur_movement = Movement::RIGHT;
     create_fleet();
 }
 
@@ -27,6 +28,7 @@ void Game::game_loop()
                 handle_key_events(event);
             }
         }
+        move_fleet();
         render();
     }
 }
@@ -76,5 +78,47 @@ void Game::create_fleet()
     for(int i = 0; i < num_in_row - 1; ++i)
     {
         alien_fleet.push_back(new Alien(sf::Vector2f(leftmost_alien_pos.x + (i * alien_size.x), 0.f)));
+    }
+}
+
+void Game::move_fleet()
+{
+    Alien alien;
+    if(cur_movement == Movement::RIGHT)
+    {
+        for(int i = alien_fleet.size() - 1; i >= 0; --i)
+        {
+            alien_fleet[i]->move(C_alien_right_offset);
+        }
+        if(alien_fleet.back()->getPosition().x + alien.get_size().x >= dimensionX){
+            cur_movement = Movement::LEFT;
+            if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
+                move_fleet_down();
+            }
+        }
+        
+    }
+    else if(cur_movement == Movement::LEFT)
+    {
+        for(int i = 0; i < alien_fleet.size(); ++i)
+        {
+            alien_fleet[i]->move(C_alien_left_offset);
+        }
+        if(alien_fleet[0]->getPosition().x <= 0)
+        {
+            cur_movement = Movement::RIGHT;
+            if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
+                move_fleet_down();
+            }
+        }
+    }
+}
+
+void Game::move_fleet_down()
+{
+    Alien alien;
+    for(int i = 0; i < alien_fleet.size(); ++i)
+    {
+        alien_fleet[i]->move(0.f, alien.get_size().y / 2);
     }
 }

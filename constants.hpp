@@ -17,5 +17,7 @@ extern const float dimensionY;
 
 extern const sf::Vector2f C_left_offset;
 extern const sf::Vector2f C_right_offset;
+extern const sf::Vector2f C_alien_left_offset;
+extern const sf::Vector2f C_alien_right_offset;
 
 #endif

@@ -12,7 +12,7 @@ Game::Game()
     /*Ship initialization*/
     ship.init(sf::Vector2f(dimensionX / 2, dimensionY - ship.get_size().y));
     bullet_num = 3;
-    bullet_index = 0;
+    bullet_index = points = 0;
     for(int i = 0; i < bullet_num; ++i)
     {
         bullets.push_back(new Bullet);
@@ -53,7 +53,6 @@ void Game::game_loop()
                 if(bullets[i]->getPosition().y < 0.f)
                 {
                     reload(i);
-    //                std::cout << "Restored " << i << std::endl; //DEL
                 }
             }
         }
@@ -73,6 +72,7 @@ void Game::game_loop()
                         alien_fleet[j] = nullptr;
                         alien_fleet.erase(alien_fleet.begin() + j);
                         reload(i);
+                        points += 10;
                     }
                 }
             }
@@ -129,7 +129,6 @@ void Game::handle_key_events(sf::Event &event)
             break;
         case sf::Keyboard::Space:
             fire();
-//            std::cout << "FIRED" << std::endl; //DEL
             break;
     }
 }
@@ -172,6 +171,7 @@ void Game::move_fleet()
             if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
                 move_fleet_down();
             }
+            else signal_gameover();
         }
         
     }
@@ -187,6 +187,10 @@ void Game::move_fleet()
             if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
                 move_fleet_down();
                 create_fleet();
+            }
+            else
+            {
+                signal_gameover();
             }
         }
     }
@@ -205,7 +209,9 @@ void Game::fire()
 {
     if(bullet_index < bullet_num)
     {
-        bullets[bullet_index]->setPosition(ship.getPosition());
+        Alien alien;
+        sf::Vector2f ship_pos = ship.getPosition();
+        bullets[bullet_index]->setPosition(ship_pos.x + (alien.get_size().x / 2), ship_pos.y);
         bullets[bullet_index]->is_loaded = false;
         bullet_index++;
     }
@@ -215,4 +221,10 @@ void Game::reload(int i)
 {
     if(bullet_index > 2) bullet_index = 0;
     bullets[i]->is_loaded = true;
+}
+
+void Game::signal_gameover()
+{
+    std::cout << points << " GAME OVER" << std::endl;
+    window.close();
 }

@@ -23,7 +23,7 @@ private:
     std::vector<Bullet*> bullets;
     Ship ship;
     Movement cur_movement;
-    int alien_num, bullet_index, bullet_num;
+    int alien_num, bullet_index, bullet_num, points;
 
     void render();
     void handle_key_events(sf::Event &event);
@@ -32,6 +32,7 @@ private:
     void move_fleet_down();
     void fire();
     void reload(int i);
+    void signal_gameover();
 
 public:
     Game();

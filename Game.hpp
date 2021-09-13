@@ -6,6 +6,7 @@
 
 #include "Ship.hpp"
 #include "Alien.hpp"
+#include "Bullet.hpp"
 
 enum Movement {
     DOWN,
@@ -17,16 +18,21 @@ class Game
 {
 private:
     sf::RenderWindow window;
+
     std::vector<Alien*> alien_fleet;
+    std::vector<Bullet*> bullets;
     Ship ship;
     Movement cur_movement;
-    int alien_num = 0;
+    int alien_num, bullet_index, bullet_num;
 
-    void handle_key_events(sf::Event &event);
     void render();
+    void handle_key_events(sf::Event &event);
     void create_fleet();
     void move_fleet();
     void move_fleet_down();
+    void fire();
+    void reload(int i);
+
 public:
     Game();
     void game_loop();

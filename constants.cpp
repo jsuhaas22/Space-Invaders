@@ -10,3 +10,4 @@ const sf::Vector2f C_left_offset = sf::Vector2f(-10.0f, 0.0f);
 const sf::Vector2f C_right_offset = sf::Vector2f(10.0f, 0.0f);
 const sf::Vector2f C_alien_right_offset = sf::Vector2f(0.05f, 0.0f);
 const sf::Vector2f C_alien_left_offset = sf::Vector2f(-0.05f, 0.0f);
+const sf::Vector2f C_bullet_speed = sf::Vector2f(0.f, -0.5f);

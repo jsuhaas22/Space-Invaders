@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 
 #include "Game.hpp"
@@ -7,15 +8,28 @@ Game::Game()
 {
     /*Window creation*/
     window.create(sf::VideoMode(dimensionX, dimensionY), "Space Invaders!");
+    
+    /*Ship initialization*/
     ship.init(sf::Vector2f(dimensionX / 2, dimensionY - ship.get_size().y));
+    bullet_num = 3;
+    bullet_index = 0;
+    for(int i = 0; i < bullet_num; ++i)
+    {
+        bullets.push_back(new Bullet);
+    }
+    /*Ship initialization*/
+
+    /*alien fleet initialization*/
     cur_movement = Movement::RIGHT;
     create_fleet();
+    /*alien fleet initialization*/
 }
 
 void Game::game_loop()
 {
     while(window.isOpen())
     {
+        /*Handle user events*/
         sf::Event event;
         while(window.pollEvent(event))
         {
@@ -28,6 +42,42 @@ void Game::game_loop()
                 handle_key_events(event);
             }
         }
+        /*Handle user events*/
+
+        /*Move bullets that have been fired*/
+        for(int i = 0; i < bullet_num; ++i)
+        {
+            if(!bullets[i]->is_loaded)
+            {
+                bullets[i]->move(C_bullet_speed);
+                if(bullets[i]->getPosition().y < 0.f)
+                {
+                    reload(i);
+    //                std::cout << "Restored " << i << std::endl; //DEL
+                }
+            }
+        }
+        /*Move bullets that have been fired*/
+
+        /*Handle Collision*/
+        int len = alien_fleet.size();
+        for(int i = 0; i < bullet_num; ++i)
+        {
+            if(!bullets[i]->is_loaded)
+            {
+                for(int j = 0; j < len; ++j)
+                {
+                    if(bullets[i]->getGlobalBounds().intersects(alien_fleet[j]->getGlobalBounds()))
+                    {
+                        delete alien_fleet[j];
+                        alien_fleet[j] = nullptr;
+                        alien_fleet.erase(alien_fleet.begin() + j);
+                        reload(i);
+                    }
+                }
+            }
+        }
+        /*Handle Collision*/
         move_fleet();
         render();
     }
@@ -35,17 +85,28 @@ void Game::game_loop()
 
 void Game::render()
 {
-    window.clear();
+    window.clear(); //might wanna add a cool background here
 
     window.draw(ship);
     
-    /* drawing the fleet */
+    /* draw fleet */
     int len = alien_fleet.size();
     for(int i = 0; i < len; ++i)
     {
         alien_fleet[i]->draw_alien(window); 
     }
-    /* drawing the fleet */
+    /* draw fleet */
+
+    /*draw bullets*/
+    for(int i = 0; i < bullet_num; ++i)
+    {
+        if(!bullets[i]->is_loaded)
+        {
+            bullets[i]->draw(window);
+  //          std::cout << i << " " << bullets[i]->getPosition().y << std::endl; //DEL
+        }
+    }
+    /*draw bullets*/
 
     window.display();
 }
@@ -65,6 +126,10 @@ void Game::handle_key_events(sf::Event &event)
                 ship.move(C_left_offset);
                 ship.position = ship.position + C_left_offset;
             }
+            break;
+        case sf::Keyboard::Space:
+            fire();
+//            std::cout << "FIRED" << std::endl; //DEL
             break;
     }
 }
@@ -131,4 +196,20 @@ void Game::move_fleet_down()
     {
         alien_fleet[i]->move(0.f, alien.get_size().y / 2);
     }
+}
+
+void Game::fire()
+{
+    if(bullet_index < bullet_num)
+    {
+        bullets[bullet_index]->setPosition(ship.getPosition());
+        bullets[bullet_index]->is_loaded = false;
+        bullet_index++;
+    }
+}
+
+void Game::reload(int i)
+{
+    if(bullet_index > 2) bullet_index = 0;
+    bullets[i]->is_loaded = true;
 }

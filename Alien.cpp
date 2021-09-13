@@ -18,3 +18,8 @@ void Alien::draw_alien(sf::RenderWindow &window)
 {
     window.draw(*this); //sf::RenderWindow::draw(...) doesn't accept pointers.
 }
+
+unsigned int Alien::get_id() const
+{
+    return id;
+}

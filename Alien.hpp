@@ -17,6 +17,7 @@ public:
     Alien(const unsigned int ID = 0, const sf::Vector2f &position = sf::Vector2f(0.f, 0.f));
     sf::Vector2u get_size() const;
     void draw_alien(sf::RenderWindow &window);
+    unsigned int get_id() const;
 };
 
 #endif

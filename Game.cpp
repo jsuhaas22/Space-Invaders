@@ -149,8 +149,11 @@ void Game::create_fleet()
     sf::Vector2f leftmost_alien_pos = sf::Vector2f(0.f, 0.f);
     for(i = 0; i < num_in_row - 1; ++i)
     {
-        alien_fleet.push_back(new Alien(i + alien_num, 
-        sf::Vector2f(leftmost_alien_pos.x + (i * alien_size.x), 0.f)));
+        int a_id = i + alien_num;
+        float left = 0 + (i * alien_size.x);
+        float right = dimensionX - ((num_in_row - 1 - i) * alien_size.x) + alien_size.x;
+        const sf::Vector2f pos = sf::Vector2f(leftmost_alien_pos.x + (i * alien_size.x), 0.f);
+        alien_fleet.push_back(new Alien(a_id, pos, left, right));
     }
     alien_num += i;
 }
@@ -164,7 +167,7 @@ void Game::move_fleet()
         {
             alien_fleet[i]->move(C_alien_right_offset);
         }
-        if(alien_fleet.back()->getPosition().x + alien.get_size().x >= dimensionX){
+        if(alien_fleet.back()->getPosition().x + alien.get_size().x >= alien_fleet.back()->get_right_limit()){
             cur_movement = Movement::LEFT;
             if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
                 move_fleet_down();
@@ -178,7 +181,7 @@ void Game::move_fleet()
         {
             alien_fleet[i]->move(C_alien_left_offset);
         }
-        if(alien_fleet[0]->getPosition().x <= 0)
+        if(alien_fleet[0]->getPosition().x <= alien_fleet[0]->get_left_limit())
         {
             cur_movement = Movement::RIGHT;
             if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){

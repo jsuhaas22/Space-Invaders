@@ -2,7 +2,10 @@
 #define GAME
 
 #include <vector>
+#include <string>
+
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "Ship.hpp"
 #include "Alien.hpp"
@@ -18,7 +21,10 @@ class Game
 {
 private:
     sf::RenderWindow window;
+    sf::Text score_board;
+    sf::Font font;
 
+    std::string score_text;
     std::vector<Alien*> alien_fleet;
     std::vector<Bullet*> bullets;
     Ship ship;

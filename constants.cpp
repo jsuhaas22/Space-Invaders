@@ -2,6 +2,7 @@
 
 const std::string C_ship_file_path = "Resources/shipp.png";
 const std::string C_alien_file_path = "Resources/alienn.png";
+const std::string C_arial_path = "Resources/arial.ttf";
 
 const float dimensionX = 750;
 const float dimensionY = 450;

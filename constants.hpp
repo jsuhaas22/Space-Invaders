@@ -8,6 +8,7 @@
 /* Image File Path */
 extern const std::string C_ship_file_path;
 extern const std::string C_alien_file_path;
+extern const std::string C_arial_path;
 /* Image File Path */
 
 /* window dimensions */

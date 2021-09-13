@@ -23,6 +23,14 @@ Game::Game()
     cur_movement = Movement::RIGHT;
     create_fleet();
     /*alien fleet initialization*/
+
+    /*Score card initialization*/
+    score_text = "Points " + std::to_string(points);
+    font.loadFromFile(C_arial_path);
+    score_board.setFont(font);
+    score_board.setString(score_text);
+    score_board.setPosition(sf::Vector2f(0.f, dimensionY - 50));
+    /*Score card initialization*/
 }
 
 void Game::game_loop()
@@ -78,6 +86,12 @@ void Game::game_loop()
             }
         }
         /*Handle Collision*/
+
+        /*Update points*/
+        score_text = "Points " + std::to_string(points);
+        score_board.setString(score_text);
+        /*Update points*/
+
         move_fleet();
         render();
     }
@@ -103,10 +117,11 @@ void Game::render()
         if(!bullets[i]->is_loaded)
         {
             bullets[i]->draw(window);
-  //          std::cout << i << " " << bullets[i]->getPosition().y << std::endl; //DEL
         }
     }
     /*draw bullets*/
+
+    window.draw(score_board);
 
     window.display();
 }

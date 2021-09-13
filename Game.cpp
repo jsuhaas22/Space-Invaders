@@ -8,7 +8,8 @@ Game::Game()
 {
     /*Window creation*/
     window.create(sf::VideoMode(dimensionX, dimensionY), "Space Invaders!");
-    
+    gameover_signal = false;
+
     /*Ship initialization*/
     ship.init(sf::Vector2f(dimensionX / 2, dimensionY - ship.get_size().y));
     bullet_num = 3;
@@ -95,34 +96,45 @@ void Game::game_loop()
         move_fleet();
         render();
     }
+
 }
 
 void Game::render()
 {
     window.clear(); //might wanna add a cool background here
-
-    window.draw(ship);
+    if(gameover_signal)
+    {
+        std::string gameover_string = "GAMEOVER\nScore: " + std::to_string(points) + "\nHit Enter to Exit";
+        sf::Text gameover_text(gameover_string, font);
+        gameover_text.setPosition(sf::Vector2f(dimensionX / 2, dimensionY / 2));
+        window.draw(gameover_text);
+        window.display();
+        return;
+    }
+    else
+    {
+        window.draw(ship);
     
-    /* draw fleet */
-    int len = alien_fleet.size();
-    for(int i = 0; i < len; ++i)
-    {
-        alien_fleet[i]->draw_alien(window); 
-    }
-    /* draw fleet */
-
-    /*draw bullets*/
-    for(int i = 0; i < bullet_num; ++i)
-    {
-        if(!bullets[i]->is_loaded)
+        /* draw fleet */
+        int len = alien_fleet.size();
+        for(int i = 0; i < len; ++i)
         {
-            bullets[i]->draw(window);
+            alien_fleet[i]->draw_alien(window); 
         }
+        /* draw fleet */
+
+        /*draw bullets*/
+        for(int i = 0; i < bullet_num; ++i)
+        {
+            if(!bullets[i]->is_loaded)
+            {
+                bullets[i]->draw(window);
+            }
+        }
+        /*draw bullets*/
+
+        window.draw(score_board);
     }
-    /*draw bullets*/
-
-    window.draw(score_board);
-
     window.display();
 }
 
@@ -145,6 +157,8 @@ void Game::handle_key_events(sf::Event &event)
         case sf::Keyboard::Space:
             fire();
             break;
+        case sf::Keyboard::Enter:
+            if(gameover_signal) window.close();
     }
 }
 
@@ -186,7 +200,7 @@ void Game::move_fleet()
             if(alien_fleet[0]->getPosition().y + alien_fleet[0]->get_size().y < dimensionY){
                 move_fleet_down();
             }
-            else signal_gameover();
+            else gameover_signal = true;
         }
         
     }
@@ -205,7 +219,7 @@ void Game::move_fleet()
             }
             else
             {
-                signal_gameover();
+                gameover_signal = true;
             }
         }
     }
@@ -236,10 +250,4 @@ void Game::reload(int i)
 {
     if(bullet_index > 2) bullet_index = 0;
     bullets[i]->is_loaded = true;
-}
-
-void Game::signal_gameover()
-{
-    std::cout << points << " GAME OVER" << std::endl;
-    window.close();
 }

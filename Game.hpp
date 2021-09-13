@@ -27,10 +27,13 @@ private:
     std::string score_text;
     std::vector<Alien*> alien_fleet;
     std::vector<Bullet*> bullets;
+    
     Ship ship;
     Movement cur_movement;
-    int alien_num, bullet_index, bullet_num, points;
 
+    int alien_num, bullet_index, bullet_num, points;
+    bool gameover_signal;
+    
     void render();
     void handle_key_events(sf::Event &event);
     void create_fleet();
